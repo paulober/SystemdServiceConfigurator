@@ -4,7 +4,7 @@
 A brief description of what this project does and who it's for
 
 
-![Hex.pm](https://img.shields.io/hexpm/l/SystemdServiceConfigurator?style=for-the-badge)
+![Apache-2.0](https://img.shields.io/hexpm/l/SystemdServiceConfigurator?style=for-the-badge)
 
 
 ## Features
