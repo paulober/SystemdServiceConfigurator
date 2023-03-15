@@ -20,5 +20,5 @@ A brief description of what this project does and who it's for
 Install via the Microsoft Store:
 
 <a href="ms-windows-store://pdp/?productid=9N64D42NSSRD&cid=&mode=full">
-	<img src="https://get.microsoft.com/images/en%20dark.svg"/>
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg"/>
 </a>
