@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SystemdServiceConfigurator (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "SystemdServiceConfigurator (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

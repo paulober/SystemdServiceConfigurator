@@ -1,0 +1,5 @@
+﻿The file icon was designed by Tobias Bernard from the GNOME project in 2019. It's licensed under CC BY-SA 4.0: 
+https://creativecommons.org/licenses/by-sa/4.0/
+
+The systemd logo was made by: Tobias Bernard from the GNOME project in 2019. It's licensed under CC BY-SA 4.0
+https://creativecommons.org/licenses/by-sa/4.0/

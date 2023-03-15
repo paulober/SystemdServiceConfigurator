@@ -1,0 +1,384 @@
+<Page
+    x:Class="SystemdServiceConfigurator.Pages.SystemdEditPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:SystemdServiceConfigurator.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="using:SystemdServiceConfigurator.UserControls"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    mc:Ignorable="d"
+    Background="Transparent"
+    d:DataContext="{d:DesignInstance Type=vm:SystemdServiceViewModel}">
+
+    <ScrollViewer 
+        HorizontalScrollMode="Disabled" 
+        VerticalScrollMode="Auto" 
+        VerticalScrollBarVisibility="Auto"
+        MaxWidth="1200"
+        Padding="100,0,100,0">
+        
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="20,10,8,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock 
+                Grid.Row="0" 
+                Grid.Column="0" 
+                Text="{Binding ServiceName, Mode=OneWay}" 
+                Style="{ThemeResource SubheaderTextBlockStyle}" 
+                Margin="0,0,0,30"/>
+
+            <StackPanel 
+                Grid.Row="1" 
+                Grid.Column="0"
+                HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch" 
+                Orientation="Vertical">
+            
+                <Expander 
+                    IsExpanded="True"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    ExpandDirection="Down"
+                    MaxHeight="550"
+                    Header="Unit">
+                    <Expander.Content>
+                        <ScrollViewer 
+                            HorizontalScrollMode="Disabled" 
+                            VerticalScrollMode="Auto" 
+                            VerticalScrollBarVisibility="Auto" 
+                            HorizontalAlignment="Stretch">
+                            
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="150"/>
+                                </Grid.RowDefinitions>
+
+                                <uc:ServiceValueEditControl 
+                                    Grid.Column="0" 
+                                    Grid.Row="0" 
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="{StaticResource SmallTopBottomMediumLeftRightMargin}"
+                                    Title="Description"
+                                    Description="A short human readable title of the unit. This may be used by systemd (and other UIs) as a user-visible label for the unit, so this string should identify the unit rather than describe it, despite the name. [Source 1]">
+                                    <uc:ServiceValueEditControl.Value>
+                                        <Binding Path="ServiceData.UnitDescription" Mode="TwoWay" />
+                                    </uc:ServiceValueEditControl.Value>
+                                </uc:ServiceValueEditControl>
+
+                                <uc:ServiceValueEditControl 
+                                    Grid.Column="0" 
+                                    Grid.Row="1" 
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="{StaticResource SmallTopBottomMediumLeftRightMargin}"
+                                    Title="Wants"
+                                    Description="Configures (weak) requirement dependencies on other units. This option may be specified more than once or multiple space-separated units may be specified in one option... [Source 1]">
+                                    <uc:ServiceValueEditControl.Value>
+                                        <Binding Path="ServiceData.UnitWants" Mode="TwoWay" />
+                                    </uc:ServiceValueEditControl.Value>
+                                </uc:ServiceValueEditControl>
+
+                                <uc:ServiceValueEditControl 
+                                    Grid.Column="0" 
+                                    Grid.Row="2"  
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="{StaticResource SmallTopBottomMediumLeftRightMargin}"
+                                    Title="After"
+                                    Description="Those two settings configure ordering dependencies between units. If unit foo.service contains the setting Before=bar.service and both units are being started, bar.service's start-up is delayed until foo.service has finished starting up. After= is the inverse of Before=, i.e. while Before= ensures that the configured unit is started before the listed unit begins starting up, After= ensures the opposite, that the listed unit is fully started up before the configured unit is started... [Source 1]">
+                                    <uc:ServiceValueEditControl.Value>
+                                        <Binding Path="ServiceData.UnitAfter" Mode="TwoWay" />
+                                    </uc:ServiceValueEditControl.Value>
+                                </uc:ServiceValueEditControl>
+                            </Grid>
+                        </ScrollViewer>
+                    </Expander.Content>
+                </Expander>
+
+                <Expander 
+                    IsExpanded="False"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    ExpandDirection="Down"
+                    MaxHeight="600"
+                    Margin="{StaticResource MediumTopMargin}"
+                    Header="Service">
+                    <Expander.Content>
+                        <ScrollViewer 
+                            HorizontalScrollMode="Disabled" 
+                            VerticalScrollMode="Auto" 
+                            VerticalScrollBarVisibility="Auto" 
+                            HorizontalAlignment="Stretch">
+
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="250"/>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="150"/>
+                                </Grid.RowDefinitions>
+
+                                <uc:ServiceValueEditControl 
+                                    Grid.Column="0" 
+                                    Grid.Row="0" 
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="{StaticResource SmallTopBottomMediumLeftRightMargin}"
+                                    Title="Type"
+                                    Description="Configures the process start-up type for this service unit. One of simple, exec, forking, oneshot, dbus, notify, notify-reload or idle. [Source 1]">
+                                    <uc:ServiceValueEditControl.Value>
+                                        <Binding Path="ServiceData.ServiceType" Mode="TwoWay" />
+                                    </uc:ServiceValueEditControl.Value>
+                                </uc:ServiceValueEditControl>
+
+                                <uc:ServiceValueEditControl 
+                                    Grid.Column="0" 
+                                    Grid.Row="1" 
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="{StaticResource SmallTopBottomMediumLeftRightMargin}"
+                                    Title="ExecStart"
+                                    Description="Commands with their arguments that are executed when this service is started. [Source 1]">
+                                    <uc:ServiceValueEditControl.Value>
+                                        <Binding Path="ServiceData.ServiceExecStart" Mode="TwoWay" />
+                                    </uc:ServiceValueEditControl.Value>
+                                </uc:ServiceValueEditControl>
+
+                                <Grid
+                                    Grid.Column="0" 
+                                    Grid.Row="2"
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="{StaticResource SmallTopBottomMediumLeftRightMargin}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid 
+                                        Grid.Column="0" 
+                                        Grid.Row="0" 
+                                        Padding="{StaticResource SmallRightMargin}"
+                                        BorderBrush="DarkGray" 
+                                        BorderThickness="0,0,2,0">
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock 
+                                            Grid.Row="0" 
+                                            Grid.Column="0" 
+                                            Text="Environment" 
+                                            FontSize="{StaticResource MediumFontSize}"/>
+                                        <ScrollViewer
+                                            Grid.Row="1" 
+                                            Grid.Column="0"
+                                            HorizontalScrollMode="Disabled"
+                                            HorizontalScrollBarVisibility="Disabled"
+                                            VerticalScrollMode="Auto"
+                                            VerticalScrollBarVisibility="Auto"
+                                            Margin="{StaticResource SmallTopMargin}" >
+
+                                            <Grid HorizontalAlignment="Stretch">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock
+                                                    Grid.Row="0"
+                                                    Grid.Column="0"
+                                                    Grid.ColumnSpan="2"
+                                                    Foreground="Gray"
+                                                    TextWrapping="WrapWholeWords"
+                                                    Text="Environment variables are cool" />
+
+                                                <Button Grid.Row="1" Grid.Column="1" Click="AddEnvironmentVarButton_Click">
+                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE710;"/>
+                                                </Button>
+                                            </Grid>
+                                        </ScrollViewer>
+                                    </Grid>
+
+                                    <controls:DataGrid
+                                        Grid.Column="1"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="1"
+                                        Background="Gray"
+                                        x:Name="dataGrid"
+                                        Margin="{StaticResource MediumLeftBottomMargin}"
+                                        ItemsSource="{Binding Path=ServiceData.ServiceEnvironmentVars, Mode=TwoWay}"
+                                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                        HorizontalScrollBarVisibility="Visible"
+                                        VerticalScrollBarVisibility="Visible"
+                                        AlternatingRowBackground="Transparent"
+                                        AreRowDetailsFrozen="False"
+                                        AreRowGroupHeadersFrozen="True"
+                                        AutoGenerateColumns="False"
+                                        CanUserSortColumns="True"
+                                        CanUserReorderColumns="False"
+                                        CanUserResizeColumns="True"
+                                        ColumnHeaderHeight="32"
+                                        FrozenColumnCount="0"
+                                        GridLinesVisibility="None"
+                                        HeadersVisibility="Column"
+                                        IsReadOnly="False"
+                                        RowDetailsVisibilityMode="Collapsed"
+                                        SelectionMode="Single"
+                                        RowGroupHeaderPropertyNameAlternative="Range">
+
+                                        <controls:DataGrid.Columns>
+                                            <controls:DataGridTextColumn Header="Variable" Binding="{Binding Key}" Tag="Variable" />
+                                            <controls:DataGridTextColumn Header="Value" Binding="{Binding Value}" Tag="Value" />
+                                        </controls:DataGrid.Columns>
+
+                                        <controls:DataGrid.ContextFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Text="Delete" Tag="Delete Variable" Click="DeleteEnvironmentVarMenuFlyoutItem_Click">
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74D;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                            </MenuFlyout>
+                                        </controls:DataGrid.ContextFlyout>
+                                    </controls:DataGrid>
+                                </Grid>
+
+                                <uc:ServiceValueEditControl 
+                                    Grid.Column="0" 
+                                    Grid.Row="3" 
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="{StaticResource SmallTopBottomMediumLeftRightMargin}"
+                                    Title="ExecStop"
+                                    Description="Commands to execute to stop the service started via ExecStart=. [Source 1]">
+                                    <uc:ServiceValueEditControl.Value>
+                                        <Binding Path="ServiceData.ServiceExecStop" Mode="TwoWay" />
+                                    </uc:ServiceValueEditControl.Value>
+                                </uc:ServiceValueEditControl>
+
+                                <uc:ServiceValueEditControl 
+                                    Grid.Column="0" 
+                                    Grid.Row="4" 
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="{StaticResource SmallTopBottomMediumLeftRightMargin}"
+                                    Title="Restart"
+                                    Description="Configures whether the service shall be restarted when the service process exits, is killed, or a timeout is reached. The service process may be the main service process, but it may also be one of the processes specified with ExecStartPre=, ExecStartPost=, ExecStop=, ExecStopPost=, or ExecReload=. [Source 1]">
+                                    <uc:ServiceValueEditControl.Value>
+                                        <Binding Path="ServiceData.ServiceRestart" Mode="TwoWay" />
+                                    </uc:ServiceValueEditControl.Value>
+                                </uc:ServiceValueEditControl>
+
+                                <uc:ServiceValueEditControl 
+                                    Grid.Column="0" 
+                                    Grid.Row="5" 
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="{StaticResource SmallTopBottomMediumLeftRightMargin}"
+                                    Title="User"
+                                    IsSimple="True"
+                                    Description="The service will be run for this user which gives him the same permissions/access rights.">
+                                    <uc:ServiceValueEditControl.Value>
+                                        <Binding Path="ServiceData.ServiceUser" Mode="TwoWay" />
+                                    </uc:ServiceValueEditControl.Value>
+                                </uc:ServiceValueEditControl>
+                                
+                                <uc:ServiceValueEditControl 
+                                    Grid.Column="0" 
+                                    Grid.Row="6" 
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="{StaticResource SmallTopBottomMediumLeftRightMargin}"
+                                    Title="Group"
+                                    IsSimple="True"
+                                    Description="The service will be run within this group which gives him the same permissions/access rights.">
+                                    <uc:ServiceValueEditControl.Value>
+                                        <Binding Path="ServiceData.ServiceGroup" Mode="TwoWay" />
+                                    </uc:ServiceValueEditControl.Value>
+                                </uc:ServiceValueEditControl>
+                            </Grid>
+                        </ScrollViewer>
+                    </Expander.Content>
+                </Expander>
+
+                <Expander 
+                    IsExpanded="False"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    ExpandDirection="Down"
+                    MaxHeight="600"
+                    Margin="{StaticResource MediumTopMargin}"
+                    Header="Install">
+                    <Expander.Content>
+                        <ScrollViewer 
+                            HorizontalScrollMode="Disabled" 
+                            VerticalScrollMode="Auto" 
+                            VerticalScrollBarVisibility="Auto" 
+                            HorizontalAlignment="Stretch">
+
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="150"/>
+                                </Grid.RowDefinitions>
+
+                                <uc:ServiceValueEditControl 
+                                    Grid.Column="0" 
+                                    Grid.Row="0" 
+                                    HorizontalAlignment="Stretch" 
+                                    Margin="{StaticResource SmallTopBottomMediumLeftRightMargin}"
+                                    Title="WantedBy"
+                                    Description="WantedBy is a directive used in systemd service unit files. It specifies dependencies between units and determines when a service should be started. For example, WantedBy=multi-user.target tells systemd that this service should be started as part of normal system start-up.">
+                                    <uc:ServiceValueEditControl.Value>
+                                        <Binding Path="ServiceData.InstallWantedBy" Mode="TwoWay" />
+                                    </uc:ServiceValueEditControl.Value>
+                                </uc:ServiceValueEditControl>
+                            </Grid>
+                        </ScrollViewer>
+                    </Expander.Content>
+                </Expander>
+            </StackPanel>
+            
+            <Grid 
+                Grid.Row="2" 
+                Grid.Column="0" 
+                HorizontalAlignment="Stretch" 
+                Margin="{StaticResource LargeTopMargin}" 
+                Padding="{StaticResource MediumBottomMargin}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock x:Name="SaveStatusLabel" Text="Unsaved changes..." Foreground="Red" />
+                
+                <!--<Button 
+                    Grid.Column="1" 
+                    Content="Cancel" 
+                    Click="CancelBtn_OnClick" 
+                    Margin="{StaticResource SmallRightMargin}" 
+                    FontSize="{StaticResource MediumFontSize}"/>-->
+                <Button 
+                    Grid.Column="2" 
+                    Content="Save" 
+                    Click="SaveBtn_OnClick" 
+                    Style="{StaticResource AccentButtonStyle}" 
+                    FontSize="{StaticResource MediumFontSize}"/>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</Page>
