@@ -4,15 +4,19 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Xml.Linq;
 using SystemdServiceConfigurator.Helpers;
 using SystemdServiceConfigurator.Pages;
 using SystemdServiceConfigurator.ViewModels;
 using Windows.ApplicationModel;
+using Windows.Foundation;
+using Windows.Graphics;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.System;
@@ -88,8 +92,10 @@ namespace SystemdServiceConfigurator
             titleBar.ExtendsContentIntoTitleBar = true;
             titleBar.PreferredHeightOption = TitleBarHeightOption.Standard;
 
-            SetTitleBar(CustomDragRegion);
-            CustomDragRegion.MinWidth = 188;
+            //SetTitleBar(CustomDragRegion);
+            //CustomDragRegion.MinWidth = 188;
+            CustomDragRegion.MinWidth = 188 + 20;
+            CalculateCustomDragRegion();
 
             AppTitle.Text = Package.Current.DisplayName;
 
@@ -258,8 +264,11 @@ namespace SystemdServiceConfigurator
                 case ContentDialogResult.None:
                 default:
                     Debug.WriteLine("Canceled <NewTab> operation");
-                    break;
+                    return;
             }
+
+            // adjust drag region as new tabs don't trigger SizeChanged on TabView
+            CalculateCustomDragRegion();
         }
 
         private bool _ctrlNCurrentlyInvoked = false;
@@ -386,5 +395,29 @@ namespace SystemdServiceConfigurator
             // free memory (remove references so GC can remove objects)
             activationFiles = null;
         }
+
+        private void CalculateCustomDragRegion()
+        {
+            /*var transform = CustomDragRegion.TransformToVisual(Content);
+            Point relativePosition = transform.TransformPoint(new Point(0, 0));
+            var rect = new RectInt32((int)relativePosition.X, (int)relativePosition.Y,
+                (int)CustomDragRegion.ActualWidth, (int)CustomDragRegion.ActualHeight);
+            _appWindow.TitleBar.SetDragRectangles(new[] { rect });*/
+
+            var transform = CustomDragRegion.TransformToVisual(Content);
+            Point topLeft = transform.TransformPoint(new Point(0, 0));
+            Point bottomRight = transform.TransformPoint(new Point(CustomDragRegion.ActualWidth, CustomDragRegion.ActualHeight));
+
+            int x = (int)Math.Round(topLeft.X) + 115;
+            int y = (int)Math.Round(topLeft.Y);
+            //int width = (int)Math.Round(bottomRight.X - topLeft.X);
+            int width = _appWindow.Size.Width - x;
+            int height = (int)Math.Round(bottomRight.Y - topLeft.Y);
+
+            // (int)Math.Round(CustomDragRegion.ActualWidth)+100
+            _appWindow.TitleBar.SetDragRectangles(new[] { new RectInt32(x, y, width, height) });
+        }
+
+        private void Window_SizeChanged(object sender, WindowSizeChangedEventArgs args) => CalculateCustomDragRegion();
     }
 }

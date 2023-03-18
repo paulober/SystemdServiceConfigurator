@@ -9,11 +9,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    SizeChanged="Window_SizeChanged">
 
+    <!-- drag region workaround: Margin="{StaticResource MediumTopMargin}" -->
     <muxc:TabView
         x:Name="MainTabView"
-        Margin="{StaticResource MediumTopMargin}"
         TabItemsSource="{x:Bind Tabs, Mode=OneWay}"
         AddTabButtonClick="TabView_AddTabButtonClick" 
         TabCloseRequested="TabView_TabCloseRequested"
