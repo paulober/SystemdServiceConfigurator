@@ -43,17 +43,24 @@ namespace SystemdServiceConfigurator
         }
 
         public ObservableCollection<TabViewItem> Tabs { get; } = new();
-        private IReadOnlyList<IStorageItem>? activationFiles;
+        private IReadOnlyList<IStorageItem>? _activationFiles;
 
         public MainWindow(IReadOnlyList<IStorageItem>? activationFiles = null)
         {
-            this.activationFiles = activationFiles;
+            this._activationFiles = activationFiles;
             this.InitializeComponent();
 
             _appWindow = GetAppWindowForCurrentWindow();
+            if (_appWindow.ClientSize.Width > 1400)
+            {
+                _appWindow.ResizeClient(new SizeInt32(1400, _appWindow.ClientSize.Height));
+            }
+            if (_appWindow.ClientSize.Height > 800)
+            {
+                _appWindow.ResizeClient(new SizeInt32(_appWindow.ClientSize.Width, 800));
+            }
 
-            // TODO: new integrated approach will be added with WindowsAppSDK v1.3
-            TrySetMicaBackdrop();
+            this.SystemBackdrop = new MicaBackdrop();
 
             // Check to see if customization is supported.
             // Currently only supported on Windows 11.
@@ -119,35 +126,7 @@ namespace SystemdServiceConfigurator
         }
 
         private WindowsSystemDispatcherQueueHelper? _mWsdqHelper; // See separate sample below for implementation
-        private MicaController? _mMicaController;
         private SystemBackdropConfiguration? _mConfigurationSource;
-
-        private bool TrySetMicaBackdrop()
-        {
-            if (!MicaController.IsSupported()) return false; // Mica is not supported on this system
-            
-            _mWsdqHelper = new WindowsSystemDispatcherQueueHelper();
-            _mWsdqHelper.EnsureWindowsSystemDispatcherQueueController();
-
-            // Hooking up the policy object
-            _mConfigurationSource = new Microsoft.UI.Composition.SystemBackdrops.SystemBackdropConfiguration();
-            Activated += Window_Activated;
-            Closed += Window_Closed;
-            ((FrameworkElement)this.Content).ActualThemeChanged += Window_ThemeChanged;
-
-            // Initial configuration state.
-            _mConfigurationSource.IsInputActive = true;
-            SetConfigurationSourceTheme();
-
-            _mMicaController = new Microsoft.UI.Composition.SystemBackdrops.MicaController();
-
-            // Enable the system backdrop.
-            // Note: Be sure to have "using WinRT;" to support the Window.As<...>() call.
-            _mMicaController.AddSystemBackdropTarget(this.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
-            _mMicaController.SetSystemBackdropConfiguration(_mConfigurationSource);
-            
-            return true; // succeeded
-        }
 
         private void Window_Activated(object sender, WindowActivatedEventArgs args)
         {
@@ -157,13 +136,6 @@ namespace SystemdServiceConfigurator
 
         private void Window_Closed(object sender, WindowEventArgs args)
         {
-            // Make sure any Mica/Acrylic controller is disposed so it doesn't try to
-            // use this closed window.
-            if (_mMicaController != null)
-            {
-                _mMicaController.Dispose();
-                _mMicaController = null;
-            }
             this.Activated -= Window_Activated;
             _mConfigurationSource = null;
         }
