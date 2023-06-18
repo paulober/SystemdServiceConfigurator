@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Xml.Linq;
 using SystemdServiceConfigurator.Helpers;
 using SystemdServiceConfigurator.Pages;
 using SystemdServiceConfigurator.ViewModels;
@@ -19,8 +18,6 @@ using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.System;
-using WinRT;
 using WinRT.Interop;
 
 namespace SystemdServiceConfigurator
@@ -35,7 +32,7 @@ namespace SystemdServiceConfigurator
         private const Symbol SavedFileIcon = Symbol.Save;
 
         private nint _hWnd => WindowNative.GetWindowHandle(this);
-        private AppWindow _appWindow;
+        private readonly AppWindow _appWindow;
 
         public void InitializeWith(object target)
         {
@@ -76,7 +73,8 @@ namespace SystemdServiceConfigurator
                 IconSource = new SymbolIconSource { Symbol = Symbol.Home },
                 Header = "Home",
                 IsSelected = true,
-                IsHoldingEnabled = false
+                IsHoldingEnabled = false,
+                CanDrag = false
             };
 
             Frame homeFrame = new()
@@ -101,8 +99,7 @@ namespace SystemdServiceConfigurator
 
             //SetTitleBar(CustomDragRegion);
             //CustomDragRegion.MinWidth = 188;
-            CustomDragRegion.MinWidth = 188 + 20;
-            CalculateCustomDragRegion();
+            // CustomDragRegion.MinWidth = 188 + 20;
 
             AppTitle.Text = Package.Current.DisplayName;
 
@@ -348,10 +345,13 @@ namespace SystemdServiceConfigurator
 
         private void TabView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (activationFiles == null) return;
+            if (_activationFiles == null)
+            {
+                return;
+            }
             
-            bool noAutoNavigation = activationFiles.Count > 1;
-            foreach (var file in activationFiles)
+            bool noAutoNavigation = _activationFiles.Count > 1;
+            foreach (var file in _activationFiles)
             {
                 try
                 {
@@ -365,22 +365,26 @@ namespace SystemdServiceConfigurator
             }
             
             // free memory (remove references so GC can remove objects)
-            activationFiles = null;
+            _activationFiles = null;
         }
 
         private void CalculateCustomDragRegion()
         {
+            return;
             /*var transform = CustomDragRegion.TransformToVisual(Content);
             Point relativePosition = transform.TransformPoint(new Point(0, 0));
             var rect = new RectInt32((int)relativePosition.X, (int)relativePosition.Y,
                 (int)CustomDragRegion.ActualWidth, (int)CustomDragRegion.ActualHeight);
             _appWindow.TitleBar.SetDragRectangles(new[] { rect });*/
-
             var transform = CustomDragRegion.TransformToVisual(Content);
+
+
             Point topLeft = transform.TransformPoint(new Point(0, 0));
             Point bottomRight = transform.TransformPoint(new Point(CustomDragRegion.ActualWidth, CustomDragRegion.ActualHeight));
 
-            int x = (int)Math.Round(topLeft.X) + 115;
+            // SizeToContent int x = (int)Math.Round(topLeft.X) + 115;
+            int x = (int)Math.Round(((FrameworkElement)MainTabView.TabStripFooter).ActualWidth);
+            //int x = _appWindow.Size.Width - (int)Math.Round(CustomDragRegion.ActualWidth);
             int y = (int)Math.Round(topLeft.Y);
             //int width = (int)Math.Round(bottomRight.X - topLeft.X);
             int width = _appWindow.Size.Width - x;
@@ -391,5 +395,12 @@ namespace SystemdServiceConfigurator
         }
 
         private void Window_SizeChanged(object sender, WindowSizeChangedEventArgs args) => CalculateCustomDragRegion();
+
+        private void MainTabView_TabItemsChanged(TabView sender, Windows.Foundation.Collections.IVectorChangedEventArgs args) => CalculateCustomDragRegion();
+
+        private void MainTabView_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
+        }
     }
 }

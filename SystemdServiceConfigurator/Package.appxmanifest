@@ -9,7 +9,7 @@
   <Identity
     Name="26580PaulOberosler.3322505D271DE"
     Publisher="CN=42BD3C1F-9B9E-4875-88FA-EA94684D36E4"
-    Version="1.0.0.0" />
+    Version="1.1.18.0" />
 
   <Properties>
     <DisplayName>Systemd Service Configurator</DisplayName>

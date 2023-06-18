@@ -13,8 +13,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" FontSize="{StaticResource TitleTextBlockFontSize}">Home</TextBlock>
@@ -63,14 +61,10 @@
                 Click="ChangeDefaultFolder_OnClick"
                 Content="Change"/>
         </Grid>-->
+        
+        <TextBlock Grid.Row="1" FontSize="{StaticResource SubtitleTextBlockFontSize}" Text="About" Margin="{StaticResource MediumTopMargin}"/>
 
-        <TextBlock Grid.Row="1" FontSize="{StaticResource SubtitleTextBlockFontSize}" Text="Settings" Margin="{StaticResource MediumTopBottomMargin}" />
-
-        <Button Grid.Row="2" Content="System titlebar switch" Click="ShortenContentFromTitleBarButton_Click"/>
-
-        <TextBlock Grid.Row="3" FontSize="{StaticResource SubtitleTextBlockFontSize}" Text="About" Margin="{StaticResource MediumTopMargin}"/>
-
-        <StackPanel Grid.Row="4" Margin="{StaticResource XSmallTopMargin}">
+        <StackPanel Grid.Row="2" Margin="{StaticResource XSmallTopMargin}">
             <TextBlock Text="{x:Bind VersionDescription, Mode=OneWay}" Style="{ThemeResource BodyTextBlockStyle}" />
 
             <TextBlock
