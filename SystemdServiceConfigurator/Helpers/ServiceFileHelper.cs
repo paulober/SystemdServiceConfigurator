@@ -19,7 +19,7 @@ namespace SystemdServiceConfigurator.Helpers
 
                 return true;
             }
-            catch (IOException ex)
+            catch (IOException)
             {
                 await Task.CompletedTask;
                 return false;

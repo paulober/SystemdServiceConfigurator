@@ -25,8 +25,6 @@ namespace SystemdServiceConfigurator
             }
         }
 
-
-
         private static bool DecideRedirection()
         {
             bool isRedirect = false;
